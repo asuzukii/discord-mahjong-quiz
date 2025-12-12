@@ -45,3 +45,15 @@ export function getRandomEmoji() {
 export function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+export function parseYaku() {
+  /**
+   * TODO(Hayato):
+   * Given a string like "234s234678p23466m", return a list of tiles so that they all
+   * the number + tile type. For "234s234678p23466m" as the example, we should return
+   * ["2s", "3s", "4s", "2p", "3p", "4p", "6p", "7p", "8p", "2m", "3m", "4m", "6m", "6m"]
+   * We can ignore winds and dragons for now.
+   */
+
+  return ["bogus", "tiles"]
+}
