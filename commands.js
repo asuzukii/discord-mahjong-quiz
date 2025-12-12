@@ -26,6 +26,15 @@ const TEST_COMMAND = {
   contexts: [0, 1, 2],
 };
 
+// Simple test command
+const PARSER_COMMAND = {
+  name: 'test_parser',
+  description: 'Basic command',
+  type: 1,
+  integration_types: [0, 1],
+  contexts: [0, 1, 2],
+};
+
 // Command containing options
 const CHALLENGE_COMMAND = {
   name: 'challenge',
@@ -44,6 +53,6 @@ const CHALLENGE_COMMAND = {
   contexts: [0, 2],
 };
 
-const ALL_COMMANDS = [TEST_COMMAND, CHALLENGE_COMMAND];
+const ALL_COMMANDS = [TEST_COMMAND, CHALLENGE_COMMAND, PARSER_COMMAND];
 
 InstallGlobalCommands(process.env.APP_ID, ALL_COMMANDS);

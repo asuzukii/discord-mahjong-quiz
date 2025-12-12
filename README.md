@@ -111,7 +111,9 @@ Click **Save Changes**, and your app should be ready to run 🚀
 ## Brainstorming Tasks for Mahjong App
 - [ ] MVP of robot (say hi when prompted?)
   - [ ] figure out how the bot should be summoned (both in channel and for the specific user)
-- [ ] pull some assets for mahjong tiles (question bank)
+- [x] pull some assets for mahjong tiles (question bank)
+- [ ] make logic to parse data
+- [ ] figure out how to make it accessible for the bot
 - [ ] have logic to interact with bot for multiple-choice question
 - [ ] have a way for bot to pull randomly from question bank
 - [ ] (bonus): keep aggregate score or # correct for each user to give back a trailing accuracy/grade
