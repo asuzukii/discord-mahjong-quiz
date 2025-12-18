@@ -118,3 +118,13 @@ Click **Save Changes**, and your app should be ready to run 🚀
 - [ ] have a way for bot to pull randomly from question bank
 - [ ] (bonus): keep aggregate score or # correct for each user to give back a trailing accuracy/grade
 - [ ] (bonus): publishing this bot to the world
+
+## When Trying to make a PR:
+Do the following:
+```sh
+# if you are branching out to your own user branch for the first time, run
+git checkout -b <some_branch_name> # e.g. git checkout -b user/asuzukii/change_readme
+git add . # . means that you are staging all files
+git commit -m "A sensible message about your changes" # you can alternatively just do git commit and then it will open up an editor for you to write a longer commit message
+git push # this might give you some prompting to set up a remote branch, in which case you would just want to copy + paste that command instead
+```
