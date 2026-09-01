@@ -58,7 +58,9 @@ export function parseYaku(str) {
    */
   const matches = str.match(/\d/g);
   const count = matches ? matches.length : 0;
-  if(count !== 14) return "Not a hand"; //r we supposed to have brackets for rly short condition statements too
+  if(count !== 14) {
+    return "Not a hand"; 
+  }
   
   const parsedYaku = [];
   let sou = str.indexOf("s");     //check position of tile id
@@ -70,8 +72,10 @@ export function parseYaku(str) {
 
   for (let i = 0; i < str.length; ++i)
   {
-    if(idpos.includes(i)) continue;          //if cursor is on the tile id continue and skip current iteration
-
+    if(idpos.includes(i)) {
+      continue;          //if cursor is on the tile id continue and skip current iteration
+    }
+    
     if (i < idpos[0]) {
       parsedYaku.push(str[i] + str[idpos[0]]);          //insert tiles
     }
