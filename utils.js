@@ -46,14 +46,49 @@ export function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export function parseYaku() {
-  /**
+export function parseYaku(str) {
+/**
    * TODO(Hayato):
    * Given a string like "234s234678p23466m", return a list of tiles so that they all
    * the number + tile type. For "234s234678p23466m" as the example, we should return
    * ["2s", "3s", "4s", "2p", "3p", "4p", "6p", "7p", "8p", "2m", "3m", "4m", "6m", "6m"]
    * We can ignore winds and dragons for now.
+   * 
+   * This function is limited strictly to only souzu pinzu and manzu; if there are any other tile id it will just parse them together
    */
+  const matches = str.match(/\d/g);
+  const count = matches ? matches.length : 0;
+  if(count !== 14) {
+    return "Not a hand"; 
+  }
+  
+  const parsedYaku = [];
+  let sou = str.indexOf("s");     //check position of tile id
+  let pin = str.indexOf("p");
+  let man = str.indexOf("m");
 
-  return ["bogus", "tiles"]
+  const idpos = [sou, pin, man];     //sort tile id by increasing order
+  idpos.sort((a, b) => a - b);       //ex: [3, -1, 16] -> [-1, 3, 16] 
+
+  for (let i = 0; i < str.length; ++i)
+  {
+    if(idpos.includes(i)) {
+      continue;          //if cursor is on the tile id continue and skip current iteration
+    }
+    
+    if (i < idpos[0]) {
+      parsedYaku.push(str[i] + str[idpos[0]]);          //insert tiles
+    }
+
+    else if (i < idpos[1]) {
+      parsedYaku.push(str[i] + str[idpos[1]]); 
+    }
+
+    else if (i < idpos[2]) {
+      parsedYaku.push(str[i] + str[idpos[2]]);
+    } 
+  }
+  
+  return parsedYaku;
 }
+

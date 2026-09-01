@@ -11,7 +11,8 @@
   "scripts": {
     "start": "node app.js",
     "register": "node commands.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "author": "Shay DeWael",
   "license": "MIT",
@@ -21,6 +22,20 @@
     "express": "^4.18.2"
   },
   "devDependencies": {
+    "jest": "^30.5.0",
     "nodemon": "^3.0.0"
-  }
+  },
+  "directories": {
+    "example": "examples"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asuzukii/discord-mahjong-quiz.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/asuzukii/discord-mahjong-quiz/issues"
+  },
+  "homepage": "https://github.com/asuzukii/discord-mahjong-quiz#readme"
 }
+
