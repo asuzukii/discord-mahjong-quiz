@@ -43,36 +43,17 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
     // "test" command
     if (name === 'test') {
       // Send a message into the channel where command was triggered from
-      console.log("Test has been triggered")
-      return res.send({
-        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-        data: {
-          flags: InteractionResponseFlags.IS_COMPONENTS_V2,
-          components: [
-            {
-              type: MessageComponentTypes.TEXT_DISPLAY,
-              // Fetches a random emoji to send from a helper function
-              content: `hello world ${getRandomEmoji()}`
-            }
-          ]
-        },
-      });
+      console.log('Test has been triggered');
+      return res.send(templateInteractionResponse({
+        content: `hello world ${getRandomEmoji()}`,
+      }));
     }
     if (name === 'test_parser') {
       // Send a message into the channel where command was triggered from
-      console.log("test_parser trigger")
-      return res.send({
-        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-        data: {
-          flags: InteractionResponseFlags.IS_COMPONENTS_V2,
-          components: [
-            {
-              type: MessageComponentTypes.TEXT_DISPLAY,
-              content: ` ${parseYaku().join(", ")}`
-            }
-          ]
-        },
-      });
+      console.log('test_parser trigger');
+      return res.send(templateInteractionResponse({
+        content: parseYaku().join(', '),
+      }));
     }
 
     // "challenge" command
@@ -90,31 +71,23 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
         objectName,
       };
 
-      return res.send({
-        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-        data: {
-          flags: InteractionResponseFlags.IS_COMPONENTS_V2,
-          components: [
-            {
-              type: MessageComponentTypes.TEXT_DISPLAY,
-              // Fetches a random emoji to send from a helper function
-              content: `Rock papers scissors challenge from <@${userId}>`,
-            },
-            {
-              type: MessageComponentTypes.ACTION_ROW,
-              components: [
-                {
-                  type: MessageComponentTypes.BUTTON,
-                  // Append the game ID to use later on
-                  custom_id: `accept_button_${req.body.id}`,
-                  label: 'Accept',
-                  style: ButtonStyleTypes.PRIMARY,
-                },
-              ],
-            },
-          ],
-        },
-      });
+      return res.send(templateInteractionResponse({
+        content: `Rock papers scissors challenge from <@${userId}>`,
+        components: [
+          {
+            type: MessageComponentTypes.ACTION_ROW,
+            components: [
+              {
+                type: MessageComponentTypes.BUTTON,
+                // Append the game ID to use later on
+                custom_id: `accept_button_${req.body.id}`,
+                label: 'Accept',
+                style: ButtonStyleTypes.PRIMARY,
+              },
+            ],
+          },
+        ],
+      }));
     }
 
     // "quiz" command
@@ -126,28 +99,21 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
       activeGames[id] = { correct };
 
       // Send a message into the channel where command was triggered from
-      return res.send({
-        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-        data: {
-          flags: InteractionResponseFlags.IS_COMPONENTS_V2,
-          components: [
-            {
-              type: MessageComponentTypes.TEXT_DISPLAY,
-              content: `Multiple choice question:`
-            },
-            {
-              type: MessageComponentTypes.ACTION_ROW,
-              components: [
-                {
-                  type: MessageComponentTypes.STRING_SELECT,
-                  custom_id: `quiz_${id}`,
-                  options,
-                },
-              ],
-            },
-          ],
-        },
-      });
+      return res.send(templateInteractionResponse({
+        content: 'Multiple choice question:',
+        components: [
+          {
+            type: MessageComponentTypes.ACTION_ROW,
+            components: [
+              {
+                type: MessageComponentTypes.STRING_SELECT,
+                custom_id: `quiz_${id}`,
+                options,
+              },
+            ],
+          },
+        ],
+      }));
     }
 
 
@@ -165,30 +131,23 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
     // Delete message with token in request body
     const endpoint = `webhooks/${process.env.APP_ID}/${req.body.token}/messages/${req.body.message.id}`;
     try {
-      await res.send({
-        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-        data: {
-          // Indicates it'll be an ephemeral message
-          flags: InteractionResponseFlags.EPHEMERAL | InteractionResponseFlags.IS_COMPONENTS_V2,
-          components: [
-            {
-              type: MessageComponentTypes.TEXT_DISPLAY,
-              content: 'What is your object of choice?',
-            },
-            {
-              type: MessageComponentTypes.ACTION_ROW,
-              components: [
-                {
-                  type: MessageComponentTypes.STRING_SELECT,
-                  // Append game ID
-                  custom_id: `select_choice_${gameId}`,
-                  options: getShuffledOptions(),
-                },
-              ],
-            },
-          ],
-        },
-      });
+      await res.send(templateInteractionResponse({
+        content: 'What is your object of choice?',
+        ephemeral: true,
+        components: [
+          {
+            type: MessageComponentTypes.ACTION_ROW,
+            components: [
+              {
+                type: MessageComponentTypes.STRING_SELECT,
+                // Append game ID
+                custom_id: `select_choice_${gameId}`,
+                options: getShuffledOptions(),
+              },
+            ],
+          },
+        ],
+      }));
       // Delete previous message
       await DiscordRequest(endpoint, { method: 'DELETE' });
     } catch (err) {
@@ -218,18 +177,9 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
 
       try {
         // Send results
-        await res.send({
-          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-          data: {
-            flags: InteractionResponseFlags.IS_COMPONENTS_V2,
-            components: [
-              {
-                type: MessageComponentTypes.TEXT_DISPLAY,
-                content: resultStr
-              }
-            ]
-            },
-        });
+        await res.send(templateInteractionResponse({
+          content: resultStr,
+        }));
         // Update ephemeral message
         await DiscordRequest(endpoint, {
           method: 'PATCH',
@@ -257,20 +207,12 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
       const isCorrect = chosen === correct;
 
       try {
-        await res.send({
-          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-          data: {
-            flags: InteractionResponseFlags.EPHEMERAL | InteractionResponseFlags.IS_COMPONENTS_V2,
-            components: [
-              {
-                type: MessageComponentTypes.TEXT_DISPLAY,
-                content: isCorrect
-                  ? `Correct! It was **${capitalize(correct)}** ${getRandomEmoji()}`
-                  : `Wrong — the correct answer was **${capitalize(correct)}**`,
-              },
-            ],
-          },
-        });
+        await res.send(templateInteractionResponse({
+          content: isCorrect
+            ? `Correct! It was **${capitalize(correct)}** ${getRandomEmoji()}`
+            : `Wrong — the correct answer was **${capitalize(correct)}**`,
+          ephemeral: true,
+        }));
       } catch (err) {
         console.error('Error sending message:', err);
       }
@@ -287,3 +229,25 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
 app.listen(PORT, () => {
   console.log('Listening on port', PORT);
 });
+
+
+// Helper to keep Discord response payloads consistent and easier to read.
+function templateInteractionResponse({
+  content,
+  components = [],
+  flags = InteractionResponseFlags.IS_COMPONENTS_V2,
+  ephemeral = false,
+} = {}) {
+  const finalFlags = ephemeral ? flags | InteractionResponseFlags.EPHEMERAL : flags;
+
+  return {
+    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+    data: {
+      flags: finalFlags,
+      components: [
+        ...(content ? [{ type: MessageComponentTypes.TEXT_DISPLAY, content }] : []),
+        ...components,
+      ],
+    },
+  };
+}
